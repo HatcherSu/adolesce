@@ -40,7 +40,7 @@ func NewServer(opts ...ServerOption) *Server {
 	}
 	// 设置middleware
 	s.Use(gin.Recovery())
-	s.Use(gin.Logger())
+	s.Use(middleware.LoggerMiddleware())
 	if s.timeout > 0 {
 		s.Use(middleware.TimeoutMiddleware(s.timeout))
 	}

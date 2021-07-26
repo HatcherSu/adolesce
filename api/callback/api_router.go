@@ -2,6 +2,7 @@ package api
 
 import (
 	"cloud_callback/internal/pkg/http"
+	"cloud_callback/internal/pkg/log"
 	"cloud_callback/internal/pkg/slerror"
 	"github.com/gin-gonic/gin"
 	nhttp "net/http"
@@ -38,10 +39,12 @@ func CallbackHandler_Create(srv CallbackHTTPServer) func(*gin.Context) {
 		var in CreateCallbackIDReq
 		if err := c.ShouldBind(&in); err != nil {
 			http.WriteFailResp(c, slerror.InvalidParamErrCode, err)
+			return
 		}
 		resp, err := srv.CreateCallbackID(c, &in)
 		if err != nil {
 			http.WriteFailResp(c, slerror.InnerServerErrCode, err)
+			return
 		}
 		http.WriteSuccessResp(c, resp)
 	}
@@ -52,11 +55,14 @@ func CallbackHandler_QueryCallbackInfoList(srv CallbackHTTPServer) func(*gin.Con
 		var in QueryCallbackInfoListReq
 		if err := c.ShouldBind(&in); err != nil {
 			http.WriteFailResp(c, slerror.InvalidParamErrCode, err)
+			return
 		}
 		resp, err := srv.QueryCallbackInfoList(c, &in)
 		if err != nil {
 			http.WriteFailResp(c, slerror.InnerServerErrCode, err)
+			return
 		}
+		log.Info("")
 		c.JSON(nhttp.StatusOK, resp)
 	}
 }
@@ -66,10 +72,12 @@ func CallbackHandler_Callback(srv CallbackHTTPServer) func(*gin.Context) {
 		var in CallbackReq
 		if err := c.ShouldBindUri(&in); err != nil {
 			http.WriteFailResp(c, slerror.InvalidParamErrCode, err)
+			return
 		}
 		err := srv.Callback(c, &in)
 		if err != nil {
 			http.WriteFailResp(c, slerror.InnerServerErrCode, err)
+			return
 		}
 		c.Data(nhttp.StatusOK, "application/text", []byte("success"))
 
@@ -81,10 +89,12 @@ func CallbackHandler_QueryCallbackLogList(srv CallbackHTTPServer) func(*gin.Cont
 		var in QueryCallbackLogListReq
 		if err := c.ShouldBind(&in); err != nil {
 			http.WriteFailResp(c, slerror.InvalidParamErrCode, err)
+			return
 		}
 		resp, err := srv.QueryCallbackLogList(c, &in)
 		if err != nil {
 			http.WriteFailResp(c, slerror.InnerServerErrCode, err)
+			return
 		}
 		c.JSON(nhttp.StatusOK, resp)
 	}
@@ -95,10 +105,12 @@ func CallbackHandler_DeleteCallbackInfo(srv CallbackHTTPServer) func(*gin.Contex
 		var in DeleteCallbackInfoReq
 		if err := c.ShouldBind(&in); err != nil {
 			http.WriteFailResp(c, slerror.InvalidParamErrCode, err)
+			return
 		}
 		err := srv.DeleteCallbackInfo(c, &in)
 		if err != nil {
 			http.WriteFailResp(c, slerror.InnerServerErrCode, err)
+			return
 		}
 		http.WriteSuccessResp(c, nil)
 	}

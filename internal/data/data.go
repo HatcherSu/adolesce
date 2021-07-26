@@ -18,10 +18,13 @@ const connectFormat = "%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t"
 var db *gorm.DB
 
 type Data struct {
+	logger log.Logger
 }
 
 func NewData(config *conf.Configs, logger log.Logger) (*Data, func(), error) {
-	data := &Data{}
+	data := &Data{
+		logger: logger,
+	}
 	if err := initDB(config, logger); err != nil {
 		return nil, nil, err
 	}
@@ -54,7 +57,9 @@ func (*Data) GetDB() *gorm.DB {
 	return db
 }
 
-func (*Data) Close() error {
-	// todo log
-	return db.Close()
+func (d *Data) Close() (err error) {
+	if err = db.Close(); err != nil {
+		d.logger.Error("db-->Close", zap.Error(err))
+	}
+	return
 }

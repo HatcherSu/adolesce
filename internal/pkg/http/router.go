@@ -1,5 +1,7 @@
 package http
 
+// todo define router
+
 import "github.com/gin-gonic/gin"
 
 type Router struct {
