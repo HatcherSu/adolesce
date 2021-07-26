@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Callback</title>
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
+</head>
+<body>
+<div class="layui-container layui-row">
+    <blockquote class="layui-elem-quote">回调信息</blockquote>
+    <table id="demo" lay-filter="test"></table>
+</div>
+
+<script src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+</script>
+<script>
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer
+            , table = layui.table;
+        tableOptions = {
+            elem: '#demo'
+            , id: "tableDemo"
+            , toolbar: 'default'
+            , contentType: 'application/json'
+            , limit: 10
+            , width: 1000
+            , method: 'post'
+            , url: 'http://localhost:8081/inner/info_list' //数据接口
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'ID', title: 'ID', sort: true, fixed: 'left'}
+                , {field: 'callback_id', title: '回调ID'}
+                , {field: 'app_id', title: '店铺id', sort: true}
+                , {field: 'verify_token', title: 'VerifyToken'}
+                , {field: 'secret_key', title: 'SecretKey'}
+                , {fixed: 'right', align: 'center', toolbar: '#barDemo'}
+            ]]
+        }
+        var tableIns = table.render(tableOptions);
+        table.on('toolbar(test)', function (obj) {
+            switch (obj.event) {
+                case 'add':
+                    layer.open({
+                        type: 2,
+                        area: ['700px', '450px'],
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: 'form.html',
+                        end: function () {
+                            tableIns.reload(tableOptions)
+                        }
+                    });
+                    break;
+                case 'delete':
+                    layer.msg("delete")
+                    break;
+                case 'update':
+                    layer.msg("update")
+                    break;
+            }
+            ;
+        });
+        // 工具
+        table.on('tool(test)', function (obj) {
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            switch (obj.event) {
+                case 'detail':
+                    localStorage.setItem("callback_id", data.callback_id);
+                    layer.open({
+                        type: 2,
+                        area: ['1100px', '650px'],
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: 'callback.html',
+                    });
+                    break;
+                case 'delete':
+                    layer.confirm('确定要删除吗?', {icon: 3, title: '提示'}, function (index) {
+                        console.log(data)
+                        console.log()
+                        $.ajax({
+                            url: "http://localhost:8081/inner/info_delete"
+                            , type: "POST"
+                            , processData: false
+                            , data: JSON.stringify({
+                                "ID": parseInt(data.ID)
+                            })
+                            , contentType: "application/json"
+                            , success: function () {
+                                layer.msg("删除成功!");
+                                obj.del();
+                            }
+                            , error: function () {
+                                layer.msg("请求出错!");
+                            }
+                        });
+                        layer.close(index);
+                    });
+                    break;
+            }
+            ;
+        });
+    });
+</script>
+</body>
+</html>

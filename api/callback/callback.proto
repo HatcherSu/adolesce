@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package callback.api;
+option go_package = "cloud_callback/blog/api";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service CallbackService {
+    // 创建回调ID
+    rpc CreateCallbackID (CreateCallbackIDReq) returns (CallbackIdResp){
+        option (google.api.http) = {
+            post: "/inner/create/"
+            body: "*"
+        };
+    };
+    // 查询回调ID列表
+    rpc QueryCallbackInfoList (QueryCallbackInfoListReq) returns (CallbackInfoListTable){
+        option (google.api.http) = {
+            post: "/inner/info_list"
+            body: "*"
+        };
+    };
+    // 回调记录
+    rpc Callback(CallbackReq) returns (google.protobuf.Empty){
+        option (google.api.http) = {
+            post: "/callback/:callback_id"
+            body: "*"
+        };
+    }
+    // 查询回调日志列表
+    rpc QueryCallbackLogList (QueryCallbackLogListReq) returns (CallbackLogListTable){
+        option (google.api.http) = {
+            post: "/inner/log_list"
+            body: "*"
+        };
+    };
+    // 查询回调日志列表
+    rpc DeleteCallbackInfo (DeleteCallbackInfoReq) returns (google.protobuf.Empty){
+        option (google.api.http) = {
+            post: "/inner/info_delete"
+            body: "*"
+        };
+    };
+}
+
+message DeleteCallbackInfoReq{
+    int64 ID = 1;
+}
+
+message CallbackLogListTable{
+    int64 code = 1;
+    string msg = 2;
+    int64 count = 3;
+    repeated CallbackLog data = 4;
+}
+
+// 回调日志
+message CallbackLog{
+    int64 ID = 1;
+    // 回调ID
+    string callback_id = 2;
+    // 请求IP地址
+    string IP = 3;
+    // 消息体
+    string msg_body = 4;
+}
+
+message QueryCallbackLogListReq{
+    int64 page = 1;
+    int64 limit = 2;
+    string callback_id = 3;
+}
+
+message CallbackReq {
+    string callback_id = 1;
+}
+
+// 查询callback info 请求
+message QueryCallbackInfoListReq {
+    int64 page = 1;
+    int64 limit = 2;
+}
+
+// 回调idList,layui格式
+message CallbackInfoListTable{
+    int64 code = 1;
+    string msg = 2;
+    int64 count = 3;
+    repeated CallbackInfo data = 4;
+}
+
+// 回调
+message CallbackInfo {
+    int64   ID = 1;
+    string  callback_id = 2;
+    string  app_id = 3;
+    string  verify_token = 4;
+    string  secret_key = 5;
+}
+
+// 创建回调ID的请求
+message CreateCallbackIDReq{
+    // 商铺ID
+    string app_id = 1;
+    // 店铺ID
+    string client_id = 2;
+    // 密钥
+    string secret_key = 3;
+    // token
+    string verify_token = 4;
+}
+
+// 回调ID响应
+message CallbackIdResp{
+    // 回调id
+    string callback_id = 1;
+}
+
+// 回调请求体
+message CreateCallbackIDRequest{
+    // 	加密字符串
+    string encrypt = 1;
+    // 	消息体签名
+    string msg_signature = 2;
+    // 时间戳
+    int64 time_stamp = 3;
+    // 随机数nonce
+    int64 nonce = 4;
+}

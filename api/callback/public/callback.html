@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>回调日志</title>
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
+</head>
+<body>
+<div class="layui-container layui-row">
+    <blockquote class="layui-elem-quote">回调日志</blockquote>
+    <table id="demo" lay-filter="test"></table>
+</div>
+
+<script src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
+<script>
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer
+            , table = layui.table;
+        var callback_id = localStorage.getItem("callback_id");
+        localStorage.getItem("lastname")
+        tableOptions = {
+            elem: '#demo'
+            , id: "tableDemo"
+            , contentType: 'application/json'
+            , limit: 10
+            , width: 1000
+            , method: 'post'
+            , where: {"callback_id": callback_id}
+            , url: 'http://localhost:8081/inner/log_list' //数据接口
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'ID', title: 'ID', sort: true, fixed: 'left'}
+                , {field: 'callback_id', title: '回调ID', sort: true}
+                , {field: 'IP', title: 'IP'}
+                , {field: 'msg_body', title: '接收消息体'}
+            ]]
+        }
+        table.render(tableOptions);
+    });
+</script>
+</body>
+</html>
