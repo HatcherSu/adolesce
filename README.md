@@ -1,11 +1,11 @@
-# Go 回调工具
+# Adolesce
 
 ## 目录结构
 
 ```
 ./
 ├── /api                             # http,grpc目录的api目录
-│   ├── /public                          # 存放页面文件
+│   ├── /public                         # 存放页面文件
 │   ├── api_router.go                   # 配置路由
 ├── /bin                             # 编译的二进制文件存放位置
 ├── /cmd                             # 应用入口目录
