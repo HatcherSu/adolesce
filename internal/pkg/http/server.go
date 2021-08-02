@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/yudeguang/ratelimit"
 	"net"
 	"net/http"
 	"strconv"
@@ -27,6 +28,7 @@ type Server struct {
 	port       int           // 端口
 	timeout    time.Duration // 超时
 	httpServer *http.Server
+	rule       *ratelimit.Rule
 }
 
 func NewServer(opts ...ServerOption) *Server {
@@ -44,6 +46,8 @@ func NewServer(opts ...ServerOption) *Server {
 	if s.timeout > 0 {
 		s.Use(middleware.TimeoutMiddleware(s.timeout))
 	}
+	r := ratelimit.NewRule()
+	r.AddRule(time.Second*5, 5)
 	gin.SetMode(s.mode)
 	return s
 }

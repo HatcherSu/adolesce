@@ -34,7 +34,7 @@
 
 1. 把相关项目`clone`到自己目录下
 ```shell
-git clone git@github.com:HatcherSu/cloud_callback.git
+git clone git@github.com:HatcherSu/adolesce.git
 ```
 
 2. 同步包到本地
