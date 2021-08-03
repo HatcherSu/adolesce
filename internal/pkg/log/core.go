@@ -38,10 +38,10 @@ func (o *Options) initCore() zapcore.Core {
 // 获取日志分割
 func getCutLogWriter(filePath string) io.Writer {
 	hook, err := rotate.New(
-		filePath+".%Y-%m-%d-%H",
+		filePath+".%Y-%m-%d",
 		rotate.WithLinkName(filePath),
-		rotate.WithMaxAge(time.Duration(24)*time.Hour),
-		rotate.WithRotationTime(time.Duration(24)*time.Hour),
+		rotate.WithMaxAge(time.Duration(24*7)*time.Hour),
+		rotate.WithRotationTime(time.Duration(24*7)*time.Hour),
 	)
 	if err != nil {
 		fmt.Printf("rotate New error :%v %v\n", color.RedString("Error:"), err)

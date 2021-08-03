@@ -22,13 +22,11 @@ func InitRouter(s *http.Server, srv CallbackHTTPServer) {
 			})
 		})
 	}
-	s.POST("/callback/:callback_id", CallbackHandler_Callback(srv)) // 回调
 }
 
 type CallbackHTTPServer interface {
 	CreateCallbackID(*gin.Context, *CreateCallbackIDReq) (*CallbackIdResp, error)
 	QueryCallbackInfoList(*gin.Context, *QueryCallbackInfoListReq) (*CallbackInfoListTable, error)
-	Callback(*gin.Context, *CallbackReq) error
 	QueryCallbackLogList(*gin.Context, *QueryCallbackLogListReq) (*CallbackLogListTable, error)
 	DeleteCallbackInfo(*gin.Context, *DeleteCallbackInfoReq) error
 }
@@ -64,23 +62,6 @@ func CallbackHandler_QueryCallbackInfoList(srv CallbackHTTPServer) func(*gin.Con
 		}
 		log.Info("")
 		c.JSON(nhttp.StatusOK, resp)
-	}
-}
-
-func CallbackHandler_Callback(srv CallbackHTTPServer) func(*gin.Context) {
-	return func(c *gin.Context) {
-		var in CallbackReq
-		if err := c.ShouldBindUri(&in); err != nil {
-			http.WriteFailResp(c, slerror.InvalidParamErrCode, err)
-			return
-		}
-		err := srv.Callback(c, &in)
-		if err != nil {
-			http.WriteFailResp(c, slerror.InnerServerErrCode, err)
-			return
-		}
-		c.Data(nhttp.StatusOK, "application/text", []byte("success"))
-
 	}
 }
 

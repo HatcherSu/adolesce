@@ -3,14 +3,12 @@ package service
 import (
 	api "cloud_callback/api/callback"
 	"cloud_callback/internal/biz"
-	"cloud_callback/internal/pkg/code"
 	"cloud_callback/internal/pkg/hash"
 	"cloud_callback/internal/pkg/log"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"go.uber.org/zap"
-	"io/ioutil"
 )
 
 // 实现接口
@@ -57,41 +55,6 @@ func (s *CallbackService) QueryCallbackLogList(context *gin.Context, req *api.Qu
 		Count: filter.Count,
 		Data:  data,
 	}, nil
-}
-
-func (s *CallbackService) Callback(c *gin.Context, req *api.CallbackReq) error {
-	var xmlData string
-	data, err := ioutil.ReadAll(c.Request.Body)
-	if err != nil {
-		s.log.Error("Callback-->ReadAll", zap.Error(err))
-		return err
-	}
-	xmlData = string(data)
-	// 根据callbackId查询
-	info, err := s.uc.QueryInfoByCallbackId(req.CallbackId)
-	if err != nil {
-		s.log.Error("Callback-->QueryInfoByCallbackId", zap.Error(err))
-		return err
-	}
-	body, err := code.Decrypt(&code.OpenConf{
-		AppId:       info.AppId,
-		VerifyToken: info.VerifyToken,
-		SecretKey:   info.SecretKey,
-	}, xmlData)
-	if err != nil {
-		s.log.Error("Callback-->Decrypt", zap.String("xmlData", xmlData), zap.Error(err))
-		return err
-	}
-	callbackLog := &biz.CallbackLog{
-		CallbackId: req.CallbackId,
-		IP:         c.ClientIP(),
-		MsgBody:    body,
-	}
-	if err := s.uc.CreateLog(callbackLog); err != nil {
-		s.log.Error("Callback-->CreateLog", zap.Any("callback_log", callbackLog), zap.Error(err))
-		return err
-	}
-	return nil
 }
 
 func (s *CallbackService) QueryCallbackInfoList(_ *gin.Context, req *api.QueryCallbackInfoListReq) (*api.CallbackInfoListTable, error) {
