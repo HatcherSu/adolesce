@@ -25,12 +25,14 @@ func (o *ConsumerOptions) AddFlags(fs *pflag.FlagSet) {
 }
 
 type ProducerOptions struct {
-	Brokers   string `json:"brokers"` //  multiple brokers are separated by ’,‘
-	Verbose   bool   `json:"verbose"`
-	Topic     string `json:"topic"`
-	RetryMax  int    `json:"retry_max"`
-	CertFile  string `json:"cert_file"`
-	KeyFile   string `json:"key_file"`
-	CaFile    string `json:"ca_file"`
-	VerifySsl bool   `json:"verify_ssl"`
+	Brokers        string `json:"brokers"` //  multiple brokers are separated by ’,‘
+	Verbose        bool   `json:"verbose"`
+	Topic          string `json:"topic"`
+	RetryMax       int    `json:"retry_max"`
+	CertFile       string `json:"cert_file"`
+	KeyFile        string `json:"key_file"`
+	CaFile         string `json:"ca_file"`
+	VerifySsl      bool   `json:"verify_ssl"`
+	FlushFrequency int    `json:"flush_frequency"` // eg: 500ms
+	Compression    string `json:"compression"`     // none,gzip,snappy,lz4,zstd
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/Shopify/sarama"
 	"go.uber.org/zap"
-	"log"
 	"strings"
 	"sync"
 )
@@ -30,7 +29,9 @@ type groupConsumer struct {
 }
 
 func NewGroupConsumer(o *ConsumerOptions, os ...ConsumerSetter) Consumer {
-	c := &groupConsumer{}
+	c := &groupConsumer{
+		log: zap.NewExample(),
+	}
 	for _, o := range os {
 		o(c)
 	}
@@ -42,6 +43,7 @@ func NewGroupConsumer(o *ConsumerOptions, os ...ConsumerSetter) Consumer {
 	version, err := sarama.ParseKafkaVersion(o.Version)
 	if err != nil {
 		c.log.Error("Error parsing Kafka version: %v", zap.Error(err))
+		return nil
 	}
 	config.Version = version
 
@@ -53,7 +55,7 @@ func NewGroupConsumer(o *ConsumerOptions, os ...ConsumerSetter) Consumer {
 	case sarama.RangeBalanceStrategyName:
 		config.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategyRange
 	default:
-		log.Panicf("Unrecognized consumer group partition assignor: %s", o.Assignor)
+		c.log.Error("Unrecognized consumer group partition assignor", zap.String("Assignor", o.Assignor))
 		return nil
 	}
 
@@ -62,15 +64,16 @@ func NewGroupConsumer(o *ConsumerOptions, os ...ConsumerSetter) Consumer {
 	}
 	client, err := sarama.NewConsumerGroup(strings.Split(o.Brokers, ","), o.Group, config)
 	if err != nil {
-		log.Panicf("Error creating consumer group client: %v", err)
+		c.log.Error("Error creating consumer group client", zap.Error(err))
+		return nil
 	}
 	c.client = client
 	return c
 }
 
-func WithLogger(log *zap.Logger) ConsumerSetter {
+func WithConsumerLogger(log *zap.Logger) ConsumerSetter {
 	return func(g *groupConsumer) {
-		g.log = log.Named("consumer")
+		g.log = log.Named("[consumer]")
 	}
 }
 
