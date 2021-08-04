@@ -35,4 +35,5 @@ type ProducerOptions struct {
 	VerifySsl      bool   `json:"verify_ssl"`
 	FlushFrequency int    `json:"flush_frequency"` // eg: 500ms
 	Compression    string `json:"compression"`     // none,gzip,snappy,lz4,zstd
+	Successes      bool   `json:"successes"`
 }

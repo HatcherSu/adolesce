@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/Shopify/sarama"
 	"go.uber.org/zap"
@@ -41,12 +42,10 @@ type Producer interface {
 type SyncProducerSetter func(*syncProducer)
 
 type syncProducer struct {
-	mu        sync.Mutex
-	log       *zap.Logger
-	producer  sarama.SyncProducer
-	topic     string
-	Partition int32 // set after send message
-	Offset    int64 // set after send message
+	mu       sync.Mutex
+	log      *zap.Logger
+	producer sarama.SyncProducer
+	topic    string
 }
 
 func NewSyncProducer(o *ProducerOptions, sets ...SyncProducerSetter) Producer {
@@ -85,23 +84,24 @@ func NewSyncProducer(o *ProducerOptions, sets ...SyncProducerSetter) Producer {
 // Implementation Producer interface
 
 func (s *syncProducer) SendMessage(message Message, header *MessageHeader) error {
+	if header == nil {
+		return errors.New("message header must not be nil")
+	}
 	jsonStr, err := message2JsonStr(message)
 	if err != nil {
 		s.log.Error("message convert to json error", zap.Error(err))
 		return err
 	}
 	var msg sarama.ProducerMessage
-	if header != nil {
-		msg = header.header2Message()
-	}
+	msg = header.header2Message()
 	msg.Topic = s.topic
 	msg.Value = sarama.StringEncoder(jsonStr)
 	partition, offset, err := s.producer.SendMessage(&msg)
 	if err != nil {
 		return fmt.Errorf("producer send message err, %v", err)
 	}
-	s.Partition = partition
-	s.Offset = offset
+	header.Partition = partition
+	header.Offset = offset
 	return nil
 }
 
@@ -140,7 +140,7 @@ func (s *syncProducer) Topic(topic string) Producer {
 
 // WithXxx Structure configuration
 
-func WithProducerLogger(log *zap.Logger) SyncProducerSetter {
+func WithSyncProducerLogger(log *zap.Logger) SyncProducerSetter {
 	return func(p *syncProducer) {
 		p.log = log.Named("[sync producer]")
 	}
