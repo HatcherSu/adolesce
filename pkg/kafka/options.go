@@ -37,3 +37,4 @@ type ProducerOptions struct {
 	Compression    string `json:"compression"`     // none,gzip,snappy,lz4,zstd
 	Successes      bool   `json:"successes"`
 }
+

@@ -14,6 +14,7 @@ init:
 	go get -u github.com/google/wire/cmd/wire
 	go get -u github.com/gin-gonic/gin
 	go get -u github.com/lestrrat/go-file-rotatelogs
+	go get -u github.com/go-redis/redis/v8
 
 ## todo make test\generate\help
 
