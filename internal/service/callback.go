@@ -14,7 +14,7 @@ import (
 // 实现接口
 var _ api.CallbackHTTPServer = (*callbackService)(nil)
 
-func NewCallbackService(log log.Logger, uc biz.CallbackUsecase) api.CallbackHTTPServer {
+func NewCallbackService(log log.Logger, uc biz.ExampleUsecase) api.CallbackHTTPServer {
 	return &callbackService{
 		log: log,
 		uc:  uc,
@@ -22,7 +22,7 @@ func NewCallbackService(log log.Logger, uc biz.CallbackUsecase) api.CallbackHTTP
 }
 
 type callbackService struct {
-	uc  biz.CallbackUsecase
+	uc  biz.ExampleUsecase
 	log log.Logger
 }
 
