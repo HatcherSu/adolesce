@@ -1,8 +1,8 @@
 package data
 
 import (
-	"cloud_callback/internal/conf"
-	"cloud_callback/internal/pkg/log"
+	"adolesce/internal/conf"
+	"adolesce/pkg/log"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"

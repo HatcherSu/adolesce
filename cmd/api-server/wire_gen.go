@@ -6,13 +6,13 @@
 package main
 
 import (
-	"cloud_callback/internal/biz"
-	"cloud_callback/internal/conf"
-	"cloud_callback/internal/data"
-	"cloud_callback/internal/pkg/app"
-	"cloud_callback/internal/pkg/log"
-	"cloud_callback/internal/server"
-	"cloud_callback/internal/service"
+	"adolesce/internal/biz"
+	"adolesce/internal/conf"
+	"adolesce/internal/data"
+	"adolesce/internal/pkg/app"
+	"adolesce/internal/server"
+	"adolesce/internal/service"
+	"adolesce/pkg/log"
 )
 
 // Injectors from wire.go:

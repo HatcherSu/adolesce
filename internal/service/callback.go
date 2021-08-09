@@ -1,10 +1,10 @@
 package service
 
 import (
-	api "cloud_callback/api/callback"
-	"cloud_callback/internal/biz"
-	"cloud_callback/internal/pkg/hash"
-	"cloud_callback/internal/pkg/log"
+	api "adolesce/api/callback"
+	"adolesce/internal/biz"
+	"adolesce/internal/pkg/hash"
+	"adolesce/pkg/log"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
@@ -12,21 +12,21 @@ import (
 )
 
 // 实现接口
-var _ api.CallbackHTTPServer = (*CallbackService)(nil)
+var _ api.CallbackHTTPServer = (*callbackService)(nil)
 
 func NewCallbackService(log log.Logger, uc biz.CallbackUsecase) api.CallbackHTTPServer {
-	return &CallbackService{
+	return &callbackService{
 		log: log,
 		uc:  uc,
 	}
 }
 
-type CallbackService struct {
+type callbackService struct {
 	uc  biz.CallbackUsecase
 	log log.Logger
 }
 
-func (s *CallbackService) DeleteCallbackInfo(context *gin.Context, req *api.DeleteCallbackInfoReq) error {
+func (s *callbackService) DeleteCallbackInfo(context *gin.Context, req *api.DeleteCallbackInfoReq) error {
 	if err := s.uc.DeleteInfo(req.ID); err != nil {
 		s.log.Error("DeleteCallbackInfo-->DeleteInfo", zap.Int64("id", req.ID), zap.Error(err))
 		return err
@@ -34,7 +34,7 @@ func (s *CallbackService) DeleteCallbackInfo(context *gin.Context, req *api.Dele
 	return nil
 }
 
-func (s *CallbackService) QueryCallbackLogList(context *gin.Context, req *api.QueryCallbackLogListReq) (*api.CallbackLogListTable, error) {
+func (s *callbackService) QueryCallbackLogList(context *gin.Context, req *api.QueryCallbackLogListReq) (*api.CallbackLogListTable, error) {
 	filter := &biz.CallbackLogFilter{
 		CallbackId: req.CallbackId,
 		Page:       req.Page,
@@ -57,7 +57,7 @@ func (s *CallbackService) QueryCallbackLogList(context *gin.Context, req *api.Qu
 	}, nil
 }
 
-func (s *CallbackService) QueryCallbackInfoList(_ *gin.Context, req *api.QueryCallbackInfoListReq) (*api.CallbackInfoListTable, error) {
+func (s *callbackService) QueryCallbackInfoList(_ *gin.Context, req *api.QueryCallbackInfoListReq) (*api.CallbackInfoListTable, error) {
 	filter := &biz.CallbackInfoFilter{
 		Page:     req.Page,
 		PageSize: req.Limit,
@@ -79,7 +79,7 @@ func (s *CallbackService) QueryCallbackInfoList(_ *gin.Context, req *api.QueryCa
 	}, nil
 }
 
-func (s *CallbackService) CreateCallbackID(_ *gin.Context, req *api.CreateCallbackIDReq) (*api.CallbackIdResp, error) {
+func (s *callbackService) CreateCallbackID(_ *gin.Context, req *api.CreateCallbackIDReq) (*api.CallbackIdResp, error) {
 	// 生成ID
 	callbackId := hash.MD5Hash(fmt.Sprintf("%s-%s-%s", req.AppId, req.SecretKey, req.VerifyToken))
 	if err := s.uc.CreateInfo(&biz.CallbackInfo{

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"cloud_callback/internal/conf"
-	"cloud_callback/internal/pkg/log"
+	"adolesce/internal/conf"
+	"adolesce/pkg/log"
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/spf13/pflag"

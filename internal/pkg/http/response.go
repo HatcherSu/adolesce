@@ -1,7 +1,7 @@
 package http
 
 import (
-	"cloud_callback/internal/pkg/slerror"
+	"adolesce/internal/pkg/slerror"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

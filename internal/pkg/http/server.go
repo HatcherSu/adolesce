@@ -1,7 +1,7 @@
 package http
 
 import (
-	"cloud_callback/internal/pkg/http/middleware"
+	"adolesce/internal/pkg/http/middleware"
 	"context"
 	"errors"
 	"github.com/gin-gonic/gin"

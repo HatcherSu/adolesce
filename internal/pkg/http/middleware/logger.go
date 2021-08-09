@@ -1,8 +1,8 @@
 package middleware
 
 import (
+	"adolesce/pkg/log"
 	"bytes"
-	"cloud_callback/internal/pkg/log"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

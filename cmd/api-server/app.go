@@ -1,9 +1,9 @@
 package main
 
 import (
-	"cloud_callback/internal/pkg/app"
-	"cloud_callback/internal/pkg/http"
-	"cloud_callback/internal/pkg/log"
+	"adolesce/internal/pkg/app"
+	"adolesce/internal/pkg/http"
+	"adolesce/pkg/log"
 	"go.uber.org/zap"
 )
 

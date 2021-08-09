@@ -80,13 +80,12 @@ func (a *App) ListenAndClose() {
 		<-c
 
 		var wg sync.WaitGroup
-		for _, callback := range a.stopFunc {
+		for _, stop := range a.stopFunc {
 			wg.Add(1)
 			go func(f func()) {
 				defer wg.Done()
-
 				f()
-			}(callback)
+			}(stop)
 		}
 		wg.Wait()
 	}()

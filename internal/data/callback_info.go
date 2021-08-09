@@ -1,8 +1,8 @@
 package data
 
 import (
-	"cloud_callback/internal/biz"
-	"cloud_callback/internal/pkg/log"
+	"adolesce/internal/biz"
+	"adolesce/pkg/log"
 )
 
 // 实现接口

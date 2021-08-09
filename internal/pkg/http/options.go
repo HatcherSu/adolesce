@@ -1,8 +1,8 @@
 package http
 
 import (
-	"cloud_callback/internal/pkg/http/middleware"
-	"cloud_callback/internal/pkg/log"
+	"adolesce/internal/pkg/http/middleware"
+	"adolesce/pkg/log"
 	"github.com/gin-gonic/gin"
 	"github.com/yudeguang/ratelimit"
 	"go.uber.org/zap"

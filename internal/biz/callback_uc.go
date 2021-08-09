@@ -1,37 +1,37 @@
 package biz
 
-import "cloud_callback/internal/pkg/log"
+import "adolesce/pkg/log"
 
-type CallbackUsecase struct {
+type ExampleUsecase struct {
 	logRepo  CallbackLogRepo
 	infoRepo CallbackInfoRepo
 	log      log.Logger
 }
 
-func NewCallbackLogUsecase(logRepo CallbackLogRepo, infoRepo CallbackInfoRepo, log log.Logger) CallbackUsecase {
-	return CallbackUsecase{logRepo, infoRepo, log}
+func NewExampleUsecase(logRepo CallbackLogRepo, infoRepo CallbackInfoRepo, log log.Logger) ExampleUsecase {
+	return ExampleUsecase{logRepo, infoRepo, log}
 }
 
-func (uc *CallbackUsecase) CreateInfo(info *CallbackInfo) error {
+func (uc *ExampleUsecase) CreateInfo(info *CallbackInfo) error {
 	return uc.infoRepo.Create(info)
 }
 
-func (uc *CallbackUsecase) QueryInfoList(filter *CallbackInfoFilter) ([]*CallbackInfo, error) {
+func (uc *ExampleUsecase) QueryInfoList(filter *CallbackInfoFilter) ([]*CallbackInfo, error) {
 	return uc.infoRepo.QueryList(filter)
 }
 
-func (uc *CallbackUsecase) QueryInfoByCallbackId(callbackId string) (*CallbackInfo, error) {
+func (uc *ExampleUsecase) QueryInfoByCallbackId(callbackId string) (*CallbackInfo, error) {
 	return uc.infoRepo.QueryByCallbackId(callbackId)
 }
 
-func (uc *CallbackUsecase) CreateLog(log *CallbackLog) error {
+func (uc *ExampleUsecase) CreateLog(log *CallbackLog) error {
 	return uc.logRepo.Create(log)
 }
 
-func (uc *CallbackUsecase) QueryLogList(filter *CallbackLogFilter) ([]*CallbackLog, error) {
+func (uc *ExampleUsecase) QueryLogList(filter *CallbackLogFilter) ([]*CallbackLog, error) {
 	return uc.logRepo.QueryList(filter)
 }
 
-func (uc *CallbackUsecase) DeleteInfo(id int64) error {
+func (uc *ExampleUsecase) DeleteInfo(id int64) error {
 	return uc.infoRepo.DeleteByID(id)
 }
