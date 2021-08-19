@@ -21,25 +21,25 @@ type callbackInfoRepo struct {
 }
 
 func (c *callbackInfoRepo) DeleteByID(id int64) error {
-	return c.data.GetDB().Delete(biz.CallbackInfo{}, id).Error
+	return c.data.db.Delete(biz.CallbackInfo{}, id).Error
 }
 
 func (c *callbackInfoRepo) QueryByCallbackId(callbackId string) (*biz.CallbackInfo, error) {
 	var info biz.CallbackInfo
-	if err := c.data.GetDB().Where("callback_id = ?", callbackId).First(&info).Error; err != nil {
+	if err := c.data.db.Where("callback_id = ?", callbackId).First(&info).Error; err != nil {
 		return nil, err
 	}
 	return &info, nil
 }
 
 func (c *callbackInfoRepo) Create(info *biz.CallbackInfo) error {
-	return c.data.GetDB().Create(info).Error
+	return c.data.db.Create(info).Error
 }
 
 // QueryList 分页查询info
 func (c callbackInfoRepo) QueryList(filter *biz.CallbackInfoFilter) ([]*biz.CallbackInfo, error) {
 	var infos []*biz.CallbackInfo
-	sqlDB := c.data.GetDB().Model(biz.CallbackInfo{})
+	sqlDB := c.data.db.Model(biz.CallbackInfo{})
 	// count 查询必须在分页之前，不然会报错
 	if err := sqlDB.Count(&filter.Count).Error; err != nil {
 		return nil, err

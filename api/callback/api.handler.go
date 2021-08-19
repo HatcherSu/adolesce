@@ -5,7 +5,6 @@ import (
 	"adolesce/pkg/http"
 	"adolesce/pkg/log"
 	"github.com/gin-gonic/gin"
-	_ "google.golang.org/genproto/googleapis/api/annotations"
 	nhttp "net/http"
 )
 

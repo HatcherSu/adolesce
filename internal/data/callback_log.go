@@ -21,12 +21,12 @@ type callbackLogRepo struct {
 }
 
 func (c *callbackLogRepo) Create(callbackLog *biz.CallbackLog) error {
-	return c.data.GetDB().Create(callbackLog).Error
+	return c.data.db.Create(callbackLog).Error
 }
 
 func (c *callbackLogRepo) QueryList(filter *biz.CallbackLogFilter) ([]*biz.CallbackLog, error) {
 	var infos []*biz.CallbackLog
-	sqlDB := c.data.GetDB().Model(biz.CallbackLog{})
+	sqlDB := c.data.db.Model(biz.CallbackLog{})
 	if filter.CallbackId != "" {
 		sqlDB = sqlDB.Where("callback_id = ?", filter.CallbackId)
 	}

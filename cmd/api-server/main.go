@@ -11,32 +11,38 @@ import (
 	"time"
 )
 
+var (
+	filename = pflag.String("env", ".env", "environment setting file")
+)
+
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	// read command line
-	var filename string
-	pflag.StringVar(&filename, "env", ".env", "environment setting file")
 	pflag.Parse()
 	// read config
-	confObj, err := conf.NewConf(filename)
+	confObj, err := conf.NewConf(*filename)
 	if err != nil {
 		fmt.Printf("NewConf error : %v %v\n", color.RedString("Error:"), err)
+		return
 	}
 	config, err := conf.NewConfig(confObj)
 	if err != nil {
 		fmt.Printf("NewConfig error :%v %v\n", color.RedString("Error:"), err)
+		return
 	}
 	// initLogger
 	logger, err := log.NewLogger(config)
 	if err != nil {
 		fmt.Printf("NewLogger error :%v %v\n", color.RedString("Error:"), err)
+		return
 	}
 	defer logger.Flush()
 	// init application
 	app, cleanup, err := initApp(config, logger)
 	if err != nil {
 		fmt.Printf("initApp error :%v %v\n", color.RedString("Error:"), err)
+		return
 	}
 	app.RegisterStopFunc(cleanup)
 	// app.run

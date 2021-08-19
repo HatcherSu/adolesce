@@ -24,8 +24,8 @@ func initApp(configs *conf.Configs, logger log.Logger) (*app.App, func(), error)
 	}
 	callbackLogRepo := data.NewCallbackLogRepo(dataData, logger)
 	callbackInfoRepo := data.NewCallbackInfoRepo(dataData, logger)
-	callbackUsecase := biz.NewCallbackLogUsecase(callbackLogRepo, callbackInfoRepo, logger)
-	callbackHTTPServer := service.NewCallbackService(logger, callbackUsecase)
+	exampleUsecase := biz.NewExampleUsecase(callbackLogRepo, callbackInfoRepo, logger)
+	callbackHTTPServer := service.NewCallbackService(logger, exampleUsecase)
 	httpServer, cleanup2, err := server.NewHTTPServer(configs, callbackHTTPServer)
 	if err != nil {
 		cleanup()

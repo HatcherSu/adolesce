@@ -7,9 +7,10 @@ import (
 
 // Configs 全局配置类
 type Configs struct {
-	LogConf  LoggerConfig
-	DataConf DatabaseConfig
-	HttpConf HttpServerConfig
+	LogConf   LoggerConfig
+	DataConf  DatabaseConfig
+	HttpConf  HttpServerConfig
+	RedisConf RedisClientConfig
 }
 
 func NewConfig(confObj *Conf) (*Configs, error) {
@@ -45,6 +46,12 @@ func NewConfig(confObj *Conf) (*Configs, error) {
 		return nil, err
 	}
 
+	// 获取数据库配置
+	var redisConf RedisClientConfig
+	if err := confObj.Scan(&redisConf, "env"); err != nil {
+		err = fmt.Errorf("confObj->Scan->RedisClientConfig: %w", err)
+		return nil, err
+	}
 	// 获取http配置
 	var httpConfig HttpServerConfig
 	if err := confObj.Scan(&httpConfig, "env"); err != nil {
@@ -55,6 +62,7 @@ func NewConfig(confObj *Conf) (*Configs, error) {
 		loggerConfig,
 		dataConfig,
 		httpConfig,
+		redisConf,
 	}, nil
 }
 
@@ -87,4 +95,17 @@ type HttpServerConfig struct {
 	HttpPort          int    `env:"HTTP_PORT"`
 	HttpIPAddr        string `env:"HTTP_IP_ADDR"`
 	DialTimeoutSecond int    `env:"HTTP_DIAL_TIMEOUT_SECOND"`
+}
+
+// RedisClientConfig redis配置
+type RedisClientConfig struct {
+	Network      string `env:"REDIS_NETWORK"` // unix or tcp
+	Address      string `env:"REDIS_ADDRESS"` // host:port
+	Password     string `env:"REDIS_PASSWORD"`
+	Database     int    `env:"REDIS_DATABASE"`
+	PoolSize     int    `env:"REDIS_POOLSIZE"`
+	PoolTimeout  int    `env:"REDIS_POOLTIMEOUT"`
+	DialTimeout  int    `env:"REDIS_DIALTIMEOUT"`
+	ReadTimeout  int    `env:"REDIS_READTIMEOUT"`
+	WriteTimeout int    `env:"REDIS_WRITETIMEOUT"`
 }

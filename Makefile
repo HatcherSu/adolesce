@@ -38,18 +38,3 @@ all:
 	make build
 	make run
 
-
-
-
-
-
-#.PHONY:	http
-#http:
-#	protoc	--proto_path=.	\
-#			--proto_path=./third_party	\
-#			--go_out=paths=source_relative:.	\
-#			--go_opt=paths=source_relative	\
-#			--go-http_out=paths=source_relative:.	\
-#			${API_PROTO_FILES}
-
-

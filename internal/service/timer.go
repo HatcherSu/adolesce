@@ -9,7 +9,7 @@ import (
 // 实现接口
 var _ api.ExampleTimerHandler = (*exampleTimerService)(nil)
 
-func NewExampleTimerService(log log.Logger, uc biz.CallbackUsecase) api.ExampleTimerHandler {
+func NewExampleTimerService(log log.Logger, uc biz.ExampleUsecase) api.ExampleTimerHandler {
 	return &exampleTimerService{
 		log: log,
 	}

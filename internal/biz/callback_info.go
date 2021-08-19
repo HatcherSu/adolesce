@@ -11,7 +11,7 @@ type CallbackInfo struct {
 	SecretKey   string `json:"secret_key" gorm:"secret_key"`
 }
 
-func (*CallbackInfo) TableName() string {
+func (CallbackInfo) TableName() string {
 	return "callback_info"
 }
 

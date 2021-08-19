@@ -8,9 +8,9 @@ import (
 	"adolesce/internal/conf"
 	"adolesce/internal/data"
 	"adolesce/internal/pkg/app"
-	"adolesce/pkg/log"
 	"adolesce/internal/server"
 	"adolesce/internal/service"
+	"adolesce/pkg/log"
 	"github.com/google/wire"
 )
 
