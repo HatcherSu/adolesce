@@ -12,9 +12,7 @@ func newTimerServer(logger log.Logger, c *cron.Cron) (*app.App, func(), error) {
 		app.WithShort("App Timer Server"),
 		app.WithLong("This is a timer for running func in time"),
 		app.WithRunFunc(runTimer(logger, c)))
-	return application, func() {
-		c.Stop()
-	}, nil
+	return application, nil, nil
 }
 
 func runTimer(logger log.Logger, c *cron.Cron) app.RunFunc {

@@ -2,4 +2,4 @@ package service
 
 import "github.com/google/wire"
 
-var ProviderSet = wire.NewSet(NewCallbackService)
+var ProviderSet = wire.NewSet(NewCallbackService,NewExampleTimerService)
