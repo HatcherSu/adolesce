@@ -1,9 +1,24 @@
-PROJECT_NAME=cloud_callback
+# Build all by default, even if it's not first
+.DEFAULT_GOAL := all
+.PHONY: all
+all: init wire build-app build-timer
+
+# ==============================================================================
+# Variable
+PROJECT_NAME=adolesce
 PROJECT_PATH=${shell pwd}
 GOPATH=$(shell go env GOPATH)
 API_PROTO_FILES=$(shell find api -name *.proto)
 INTERNAL_PROTO_FILES=${shell find internal -name *.proto}
 
+# ==============================================================================
+# Includes
+
+include scripts/make-rules/common.mk
+
+
+# ==============================================================================
+# Targets
 
 .PHONY:	init
 # init env
@@ -15,6 +30,10 @@ init:
 	go get -u github.com/gin-gonic/gin
 	go get -u github.com/lestrrat/go-file-rotatelogs
 	go get -u github.com/go-redis/redis/v8
+
+.PHONY:	tidy
+tidy:
+	@$(GO) mod tidy
 
 ## todo make test\generate\help
 
@@ -33,16 +52,11 @@ build-timer:
 
 .PHONY: run-app
 run-app:
-	./bin/cloud_callback
+	./bin/api_server
 
 .PHONY: run-timer
 run-timer:
 	./bin/app_timer
 
-.PHONY: all
-all:
-	make init
-	make wire
-	make build
-	make run
+
 
