@@ -2,68 +2,28 @@ package conf
 
 import (
 	"fmt"
-	"os"
+	"github.com/Netflix/go-env"
+	"github.com/joho/godotenv"
 )
 
 // Configs 全局配置类
 type Configs struct {
-	LogConf   LoggerConfig
-	DataConf  DatabaseConfig
-	HttpConf  HttpServerConfig
-	RedisConf RedisClientConfig
+	LoggerConfig
+	DatabaseConfig
+	HttpServerConfig
+	RedisClientConfig
 }
 
-func NewConfig(confObj *Conf) (*Configs, error) {
-	if err := confObj.Load(); err != nil {
+func NewConfig(envPath string) (*Configs, error) {
+	var config Configs
+	if err := godotenv.Load(envPath); err != nil {
 		err = fmt.Errorf("NewConfig->Load: %w", err)
 		return nil, err
 	}
-	defer func() {
-		if err := confObj.Close(); err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "NewConfig->confObj.Close: %v\n", err)
-		}
-	}()
-
-	confObj.SetWatchErrHandleFunc(func(err error) {
-		_, _ = fmt.Fprintf(os.Stderr, "Conf.WatchErrFunc: %v\n", err)
-	})
-
-	if err := confObj.Watch(); err != nil {
-		err = fmt.Errorf("NewConfig->Watch: %w", err)
+	if _, err := env.UnmarshalFromEnviron(&config); err != nil {
 		return nil, err
 	}
-
-	// 获取Logger配置
-	var loggerConfig LoggerConfig
-	if err := confObj.Scan(&loggerConfig, "env"); err != nil {
-		err = fmt.Errorf("confObj->Scan->LoggerConfig: %w", err)
-		return nil, err
-	}
-	// 获取数据库配置
-	var dataConfig DatabaseConfig
-	if err := confObj.Scan(&dataConfig, "env"); err != nil {
-		err = fmt.Errorf("confObj->Scan->DatabaseConfig: %w", err)
-		return nil, err
-	}
-
-	// 获取数据库配置
-	var redisConf RedisClientConfig
-	if err := confObj.Scan(&redisConf, "env"); err != nil {
-		err = fmt.Errorf("confObj->Scan->RedisClientConfig: %w", err)
-		return nil, err
-	}
-	// 获取http配置
-	var httpConfig HttpServerConfig
-	if err := confObj.Scan(&httpConfig, "env"); err != nil {
-		err = fmt.Errorf("confObj->Scan->HttpServerConfig: %w", err)
-		return nil, err
-	}
-	return &Configs{
-		loggerConfig,
-		dataConfig,
-		httpConfig,
-		redisConf,
-	}, nil
+	return &config, nil
 }
 
 // LoggerConfig 全局Logger配置

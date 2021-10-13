@@ -16,7 +16,7 @@ type cronCmd struct {
 func InitCron(c *cron.Cron, logger log.Logger, srv ExampleTimerHandler) error {
 	for _, cmd := range []cronCmd{
 		{
-			Cron:    "32 * * * *",
+			Cron:    "00 * * * *",
 			Name:    "DeleteExample",
 			Desc:    "delete example in 00:00",
 			RunFunc: srv.DeleteExample,

@@ -55,7 +55,7 @@ func NewLogger(config *conf.Configs) (Logger, error) {
 	defer mu.Unlock()
 	// copier
 	var opts Options
-	if err := copier.Copy(&opts, config.LogConf); err != nil {
+	if err := copier.Copy(&opts, config.DatabaseConfig); err != nil {
 		return nil, err
 	}
 	if err := validate(&opts); err != nil {

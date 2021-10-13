@@ -21,12 +21,7 @@ func main() {
 	// read command line
 	pflag.Parse()
 	// read config
-	confObj, err := conf.NewConf(*filename)
-	if err != nil {
-		fmt.Printf("NewConf error : %v %v\n", color.RedString("Error:"), err)
-		return
-	}
-	config, err := conf.NewConfig(confObj)
+	config, err := conf.NewConfig(*filename)
 	if err != nil {
 		fmt.Printf("NewConfig error :%v %v\n", color.RedString("Error:"), err)
 		return
