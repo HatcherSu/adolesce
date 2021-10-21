@@ -7,6 +7,8 @@ import (
 
 // Options logs available for external configuration
 type Options struct {
+	Env               string `json:"env"`  // dev,test,gray,prod
+	Mode              string `json:"mode"` // console,file,both
 	Level             string `json:"level"`
 	Development       bool   `json:"development"`
 	Format            string `json:"format"`
@@ -40,13 +42,13 @@ func parseLevel(level string) zapcore.Level {
 func DefaultOptions() *Options {
 	// 配置level
 	return &Options{
+		Env:               "dev",
+		Mode:              consoleMode,
 		Level:             "info",
 		Development:       true,
 		Format:            consoleFormat,
 		EnableColor:       false,
 		DisableCaller:     false,
 		DisableStacktrace: false,
-		OutputPath:        "stdout",
-		ErrorOutputPath:   "stderr",
 	}
 }

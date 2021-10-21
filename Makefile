@@ -42,6 +42,11 @@ tidy:
 wire:
 	@cd cmd && go run github.com/google/wire/cmd/wire
 
+# generate mock
+.PHONY: mock
+mock:
+	@cd internal/biz && go generate ./...
+
 .PHONY: build-app
 build-app:
 	@mkdir -p bin/ && go build -o  ./bin/cloud_callback ./cmd/api-server/

@@ -54,14 +54,14 @@ func NewLogger(config *conf.Configs) (Logger, error) {
 	mu.Lock()
 	defer mu.Unlock()
 	// copier
-	var opts Options
-	if err := copier.Copy(&opts, config.DatabaseConfig); err != nil {
+	opts := DefaultOptions()
+	if err := copier.Copy(opts, config.Log); err != nil {
 		return nil, err
 	}
-	if err := validate(&opts); err != nil {
+	if err := validate(opts); err != nil {
 		return nil, err
 	}
-	std = initLogger(&opts)
+	std = initLogger(opts)
 	return std, nil
 }
 
@@ -87,7 +87,7 @@ func initLogger(opts *Options) *zapLog {
 		zap.AddStacktrace(zapcore.PanicLevel), // 配置超过panic级别，不输出栈堆信息
 		zap.AddCallerSkip(1))
 	zap.RedirectStdLog(logger)
-	return &zapLog{logger}
+	return &zapLog{logger.Named(opts.Env)}
 }
 
 func (lg *zapLog) Flush() {

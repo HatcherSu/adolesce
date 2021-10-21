@@ -1,18 +1,23 @@
 package biz
 
-import "github.com/jinzhu/gorm"
+import "time"
+
+//go:generate mockgen -destination  mock/mock_callback_info.go -package biz -source callback_info.go
 
 // CallbackInfo 回调数据库结构体
 type CallbackInfo struct {
-	gorm.Model
+	ID          uint `gorm:"primary_key"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	CallbackId  string `json:"callback_id" gorm:"callback_id"`
 	AppId       string `json:"app_id" gorm:"app_id"`
 	VerifyToken string `json:"verify_token" gorm:"verify_token"`
 	SecretKey   string `json:"secret_key" gorm:"secret_key"`
+	State       int    `json:"state" gorm:"state"`
 }
 
 func (CallbackInfo) TableName() string {
-	return "callback_info"
+	return "t_tool_callback_info"
 }
 
 type CallbackInfoFilter struct {

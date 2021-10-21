@@ -1,0 +1,38 @@
+# Logger配置
+log:
+  env: dev
+  mode: console
+  level: info
+  development: true
+  format: console
+  enable_color: true
+  disable_caller: false
+  disable_stacktrace: false
+  output_path: ./storage/logs/cloud_callback.inf.log
+  error_output_path: ./storage/logs/cloud_callback.err.log
+
+http:
+  mode: debug
+  port: 8081
+  ip_addr: localhost
+  dial_timeout_second: 60
+
+# 数据库
+database:
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: root1234
+  database: db_open_platform
+  parse_time: true
+  charset: utf8
+redis:
+  network: tcp
+  address: "localhost:6379"
+  password: root
+  database: 0
+  pool_size: 10
+  dial_timeout: 10
+  pool_timeout: 30
+  read_timeout: 30
+  write_timeout: 30

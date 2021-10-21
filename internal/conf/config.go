@@ -8,10 +8,10 @@ import (
 
 // Configs 全局配置类
 type Configs struct {
-	LoggerConfig
-	DatabaseConfig
-	HttpServerConfig
-	RedisClientConfig
+	Log      LoggerConfig
+	DataBase DatabaseConfig
+	Http     HttpServerConfig
+	Redis    RedisClientConfig
 }
 
 func NewConfig(envPath string) (*Configs, error) {
@@ -28,14 +28,9 @@ func NewConfig(envPath string) (*Configs, error) {
 
 // LoggerConfig 全局Logger配置
 type LoggerConfig struct {
-	Level             string `env:"LOG_LEVEL"`
-	Development       bool   `env:"LOG_DEVELOPMENT"`
-	Format            string `env:"LOG_FORMAT"`
-	EnableColor       bool   `env:"LOG_ENABLE_COLOR"`
-	DisableCaller     bool   `env:"LOG_DISABLE_CALLER"`
-	DisableStacktrace bool   `env:"LOG_DISABLE_STACKTRACE"`
-	OutputPath        string `env:"LOG_OUTPUT_PATH"`
-	ErrorOutputPath   string `env:"LOG_ERROR_OUTPUT_PATH"`
+	Env             string `env:"LOG_ENV"`
+	OutputPath      string `env:"LOG_OUTPUT_PATH" yaml:"output_path"`
+	ErrorOutputPath string `env:"LOG_ERROR_OUTPUT_PATH" yaml:"error_output_path"`
 }
 
 // DatabaseConfig 数据库配置
@@ -51,10 +46,10 @@ type DatabaseConfig struct {
 
 // HttpServerConfig HTTP配置
 type HttpServerConfig struct {
-	HttpMode          string `env:"HTTP_MODE"`
-	HttpPort          int    `env:"HTTP_PORT"`
-	HttpIPAddr        string `env:"HTTP_IP_ADDR"`
-	DialTimeoutSecond int    `env:"HTTP_DIAL_TIMEOUT_SECOND"`
+	HttpMode          string `env:"HTTP_MODE" yaml:"mode"`
+	HttpPort          int    `env:"HTTP_PORT" yaml:"port"`
+	HttpIPAddr        string `env:"HTTP_IP_ADDR" yaml:"ip_addr"`
+	DialTimeoutSecond int    `env:"HTTP_DIAL_TIMEOUT_SECOND" yaml:"dial_timeout_second"`
 }
 
 // RedisClientConfig redis配置
@@ -63,9 +58,9 @@ type RedisClientConfig struct {
 	Address      string `env:"REDIS_ADDRESS"` // host:port
 	Password     string `env:"REDIS_PASSWORD"`
 	Database     int    `env:"REDIS_DATABASE"`
-	PoolSize     int    `env:"REDIS_POOLSIZE"`
-	PoolTimeout  int    `env:"REDIS_POOLTIMEOUT"`
-	DialTimeout  int    `env:"REDIS_DIALTIMEOUT"`
-	ReadTimeout  int    `env:"REDIS_READTIMEOUT"`
-	WriteTimeout int    `env:"REDIS_WRITETIMEOUT"`
+	PoolSize     int    `env:"REDIS_POOLSIZE" yaml:"pool_size"`
+	PoolTimeout  int    `env:"REDIS_POOLTIMEOUT" yaml:"pool_timeout"`
+	DialTimeout  int    `env:"REDIS_DIALTIMEOUT" yaml:"dial_timeout"`
+	ReadTimeout  int    `env:"REDIS_READTIMEOUT" yaml:"read_timeout"`
+	WriteTimeout int    `env:"REDIS_WRITETIMEOUT" yaml:"write_timeout"`
 }

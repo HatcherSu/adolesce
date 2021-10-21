@@ -1,19 +1,23 @@
 package biz
 
+//go:generate mockgen -destination  mock/mock_callback_log.go -package biz -source callback_log.go
+
 import (
-	"github.com/jinzhu/gorm"
+	"time"
 )
 
 // CallbackLog 回调数据库结构体
 type CallbackLog struct {
-	gorm.Model
+	ID         uint `gorm:"primary_key"`
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 	CallbackId string `json:"callback_id" gorm:"callback_id"`
 	IP         string `json:"ip" gorm:"ip"`             // 请求IP地址
 	MsgBody    string `json:"msg_body" gorm:"msg_body"` // 消息体
 }
 
 func (*CallbackLog) TableName() string {
-	return "callback_log"
+	return "t_tool_callback_log"
 }
 
 type CallbackLogFilter struct {

@@ -11,6 +11,12 @@ import (
 	"time"
 )
 
+const (
+	consoleMode string = "console"
+	fileMode    string = "file"
+	bothMode    string = "both"
+)
+
 func (o *Options) initCore() zapcore.Core {
 	infoLevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl < zapcore.ErrorLevel
@@ -19,20 +25,39 @@ func (o *Options) initCore() zapcore.Core {
 		return lvl >= zapcore.ErrorLevel
 	})
 
-	// log file writer
-	consoleDebugging := zapcore.Lock(os.Stdout)
-	consoleErrors := zapcore.Lock(os.Stderr)
-	infoWriter := getCutLogWriter(o.OutputPath)
-	errorWriter := getCutLogWriter(o.ErrorOutputPath)
-
 	// encoder
 	encoder := o.initEncoder()
 
-	return zapcore.NewTee(
-		zapcore.NewCore(encoder, consoleDebugging, infoLevel),
-		zapcore.NewCore(encoder, consoleErrors, errorLevel),
-		zapcore.NewCore(encoder, zapcore.AddSync(infoWriter), infoLevel),
-		zapcore.NewCore(encoder, zapcore.AddSync(errorWriter), errorLevel))
+	var cores []zapcore.Core
+
+	consoleDebugging := zapcore.Lock(os.Stdout)
+	consoleErrors := zapcore.Lock(os.Stderr)
+	// log file writer
+	switch o.Mode {
+	case consoleMode:
+		cores = append(cores,
+			zapcore.NewCore(encoder, consoleDebugging, infoLevel),
+			zapcore.NewCore(encoder, consoleErrors, errorLevel))
+	case fileMode:
+		infoWriter := getCutLogWriter(o.OutputPath)
+		errorWriter := getCutLogWriter(o.ErrorOutputPath)
+		cores = append(cores,
+			zapcore.NewCore(encoder, zapcore.AddSync(infoWriter), infoLevel),
+			zapcore.NewCore(encoder, zapcore.AddSync(errorWriter), errorLevel))
+	case bothMode:
+		infoWriter := getCutLogWriter(o.OutputPath)
+		errorWriter := getCutLogWriter(o.ErrorOutputPath)
+		cores = append(cores,
+			zapcore.NewCore(encoder, consoleDebugging, infoLevel),
+			zapcore.NewCore(encoder, consoleErrors, errorLevel),
+			zapcore.NewCore(encoder, zapcore.AddSync(infoWriter), infoLevel),
+			zapcore.NewCore(encoder, zapcore.AddSync(errorWriter), errorLevel))
+	default:
+		cores = append(cores,
+			zapcore.NewCore(encoder, consoleDebugging, infoLevel),
+			zapcore.NewCore(encoder, consoleErrors, errorLevel))
+	}
+	return zapcore.NewTee(cores...)
 }
 
 // 获取日志分割

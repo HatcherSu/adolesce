@@ -39,12 +39,12 @@ func NewData(config *conf.Configs, logger log.Logger) (*Data, func(), error) {
 
 func initDB(config *conf.Configs, logger log.Logger) (*gorm.DB, error) {
 	dns := fmt.Sprintf(connectFormat,
-		config.DatabaseConfig.UserName,
-		config.DatabaseConfig.Password,
-		config.DatabaseConfig.Host,
-		config.DatabaseConfig.Database,
-		config.DatabaseConfig.Charset,
-		config.DatabaseConfig.ParseTime)
+		config.DataBase.UserName,
+		config.DataBase.Password,
+		config.DataBase.Host,
+		config.DataBase.Database,
+		config.DataBase.Charset,
+		config.DataBase.ParseTime)
 
 	db, err := gorm.Open("mysql", dns)
 	if err != nil {
@@ -60,15 +60,15 @@ func initDB(config *conf.Configs, logger log.Logger) (*gorm.DB, error) {
 
 func initRedis(config *conf.Configs) *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
-		Network:      config.RedisClientConfig.Network,
-		Addr:         config.RedisClientConfig.Address,
-		DB:           config.RedisClientConfig.Database,
-		PoolSize:     config.RedisClientConfig.PoolSize,
-		Password:     config.RedisClientConfig.Password,
-		PoolTimeout:  time.Duration(config.RedisClientConfig.PoolTimeout) * time.Second,
-		DialTimeout:  time.Duration(config.RedisClientConfig.DialTimeout) * time.Second,
-		ReadTimeout:  time.Duration(config.RedisClientConfig.ReadTimeout) * time.Second,
-		WriteTimeout: time.Duration(config.RedisClientConfig.WriteTimeout) * time.Second,
+		Network:      config.Redis.Network,
+		Addr:         config.Redis.Address,
+		DB:           config.Redis.Database,
+		PoolSize:     config.Redis.PoolSize,
+		Password:     config.Redis.Password,
+		PoolTimeout:  time.Duration(config.Redis.PoolTimeout) * time.Second,
+		DialTimeout:  time.Duration(config.Redis.DialTimeout) * time.Second,
+		ReadTimeout:  time.Duration(config.Redis.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(config.Redis.WriteTimeout) * time.Second,
 	})
 	rdb.AddHook(redisotel.TracingHook{})
 	return rdb
