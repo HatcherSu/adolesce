@@ -3,7 +3,6 @@ package api
 import (
 	"adolesce/internal/pkg/slerror"
 	"adolesce/pkg/http"
-	"adolesce/pkg/log"
 	"github.com/gin-gonic/gin"
 	nhttp "net/http"
 )
@@ -129,7 +128,6 @@ func CallbackHandler_QueryCallbackInfoList(srv CallbackHTTPServer) func(*gin.Con
 			http.WriteFailResp(c, slerror.InnerServerErrCode, err)
 			return
 		}
-		log.Info("")
 		c.JSON(nhttp.StatusOK, resp)
 	}
 }

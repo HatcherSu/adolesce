@@ -8,10 +8,10 @@ import (
 
 func NewHTTPServer(config *conf.Configs, cbServer api.CallbackHTTPServer) (*http.Server, func(), error) {
 	var opts = []http.ServerOption{
-		http.WithPort(config.HttpServerConfig.HttpPort),
-		http.WithTimeout(config.HttpServerConfig.DialTimeoutSecond),
-		http.WithIPAddr(config.HttpServerConfig.HttpIPAddr),
-		http.WithMode(config.HttpServerConfig.HttpMode),
+		http.WithPort(config.Http.HttpPort),
+		http.WithTimeout(config.Http.DialTimeoutSecond),
+		http.WithIPAddr(config.Http.HttpIPAddr),
+		http.WithMode(config.Http.HttpMode),
 	}
 	srv := http.NewServer(opts...)
 	api.InitRouter(srv, cbServer)

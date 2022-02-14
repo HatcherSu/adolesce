@@ -27,7 +27,7 @@ func main() {
 		return
 	}
 	// initLogger
-	logger, err := log.NewLogger(config)
+	logger, err := log.NewLogger(config.Log)
 	if err != nil {
 		fmt.Printf("NewLogger error :%v %v\n", color.RedString("Error:"), err)
 		return

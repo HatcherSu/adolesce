@@ -30,32 +30,27 @@ func (o *Options) initCore() zapcore.Core {
 
 	var cores []zapcore.Core
 
-	consoleDebugging := zapcore.Lock(os.Stdout)
-	consoleErrors := zapcore.Lock(os.Stderr)
+	consoleDebuggingCore := zapcore.NewCore(encoder, zapcore.Lock(os.Stdout), infoLevel)
+	consoleErrorsCore := zapcore.NewCore(encoder, zapcore.Lock(os.Stderr), errorLevel)
+	var infoWriter, errorWriter io.Writer
 	// log file writer
 	switch o.Mode {
 	case consoleMode:
-		cores = append(cores,
-			zapcore.NewCore(encoder, consoleDebugging, infoLevel),
-			zapcore.NewCore(encoder, consoleErrors, errorLevel))
+		cores = append(cores,consoleDebuggingCore,consoleErrorsCore)
 	case fileMode:
-		infoWriter := getCutLogWriter(o.OutputPath)
-		errorWriter := getCutLogWriter(o.ErrorOutputPath)
+		infoWriter = getCutLogWriter(o.OutputPath)
+		errorWriter = getCutLogWriter(o.ErrorOutputPath)
 		cores = append(cores,
 			zapcore.NewCore(encoder, zapcore.AddSync(infoWriter), infoLevel),
 			zapcore.NewCore(encoder, zapcore.AddSync(errorWriter), errorLevel))
 	case bothMode:
-		infoWriter := getCutLogWriter(o.OutputPath)
-		errorWriter := getCutLogWriter(o.ErrorOutputPath)
-		cores = append(cores,
-			zapcore.NewCore(encoder, consoleDebugging, infoLevel),
-			zapcore.NewCore(encoder, consoleErrors, errorLevel),
+		infoWriter = getCutLogWriter(o.OutputPath)
+		errorWriter = getCutLogWriter(o.ErrorOutputPath)
+		cores = append(cores,consoleDebuggingCore,consoleErrorsCore,
 			zapcore.NewCore(encoder, zapcore.AddSync(infoWriter), infoLevel),
 			zapcore.NewCore(encoder, zapcore.AddSync(errorWriter), errorLevel))
 	default:
-		cores = append(cores,
-			zapcore.NewCore(encoder, consoleDebugging, infoLevel),
-			zapcore.NewCore(encoder, consoleErrors, errorLevel))
+		cores = append(cores,consoleDebuggingCore,consoleErrorsCore)
 	}
 	return zapcore.NewTee(cores...)
 }
